@@ -1,27 +1,8 @@
-import type { NextPage, GetServerSideProps } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 
-import Tracer from "dd-trace";
-
 import styles from "../styles/Home.module.css";
-
-export const getServerSideProps: GetServerSideProps = async ({
-  query = "",
-  resolvedUrl = "",
-  locale = "",
-  req: { rawHeaders, method },
-}) => {
-  return Tracer.trace("page.request", { resource: "home" }, async () => ({
-    props: {
-      query,
-      resolvedUrl,
-      locale,
-      rawHeaders,
-      method,
-    },
-  }));
-};
 
 const Home: NextPage = () => {
   return (

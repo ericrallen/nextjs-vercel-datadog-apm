@@ -1,23 +1,22 @@
 import type { NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
-import Tracer from "dd-trace";
+import getConfig from "next/config";
 
 import styles from "../styles/Home.module.css";
 
-export const getServerSideProps: GetServerSideProps = async ({
-  query = "",
-  resolvedUrl = "",
-  locale = "",
-  req: { rawHeaders, method },
-}) => {
-  return Tracer.trace("page.request", { resource: "test" }, async () => ({
-    props: {
-      query,
-      resolvedUrl,
-      locale,
-      rawHeaders,
-      method,
-    },
+export const getServerSideProps: GetServerSideProps = async (...data) => {
+  const { serverRuntimeConfig } = getConfig();
+
+  console.log(data);
+
+  const tracer = serverRuntimeConfig.tracer.init();
+
+  tracer.use("next", {
+    service: "telemetry-demo",
+  });
+
+  return new Promise(() => ({
+    tracing: true,
   }));
 };
 
